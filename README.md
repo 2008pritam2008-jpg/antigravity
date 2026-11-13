@@ -1,4 +1,4 @@
-# AgriAssist AI — AI-Powered Agriculture Crop Advisory Assistant
+# AgriAssist AI - AI-Powered Agriculture Crop Advisory Assistant
 
 [![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-emerald.svg)](#)
 [![Stack](https://img.shields.io/badge/Stack-React%2018%20%7C%20Node.js%20%7C%20Express%20%7C%20Supabase-forest.svg)](#)
@@ -90,32 +90,9 @@ antigravity/
 │   ├── src/
 │   │   ├── api/                # Axios client and endpoint definitions
 │   │   ├── components/         # Reusable modular UI components
-│   │   │   ├── chat/           # ChatWindow, ChatMessage
-│   │   │   ├── common/         # PageHeader, AlertBanner, LoadingSpinner, EmptyState
-│   │   │   ├── crops/          # Recommendation forms & result cards
-│   │   │   ├── cultivation/    # Schedule planner & timeline components
-│   │   │   ├── dashboard/      # Summary cards, quick action grid
-│   │   │   ├── disease/        # Image upload & disease report cards
-│   │   │   ├── farms/          # Plot registration & management forms
-│   │   │   ├── fertilizer/     # Fertilizer calculation forms & tables
-│   │   │   ├── layout/         # AppLayout, AuthLayout, Navbar, Sidebar
-│   │   │   ├── soil/           # Soil test input forms & soil health cards
-│   │   │   └── weather/        # Weather overview & agricultural alert cards
 │   │   ├── constants/          # Indian states/districts, seasons, soil classifications
 │   │   ├── context/            # Supabase AuthContext & demo session provider
 │   │   ├── pages/              # 26 Complete Application Routes
-│   │   │   ├── admin/          # AdminDashboardPage
-│   │   │   ├── advisories/     # Crop, Soil, Disease, Fertilizer, Weather pages
-│   │   │   ├── auth/           # Login, Register, ForgotPassword, ResetPassword
-│   │   │   ├── chat/           # AiAssistantPage
-│   │   │   ├── cultivation/    # Plans list, CreatePlan, PlanDetailPage
-│   │   │   ├── dashboard/      # DashboardPage
-│   │   │   ├── farms/          # FarmsPage, AddFarmPage, FarmDetailsPage
-│   │   │   ├── history/        # HistoryPage
-│   │   │   ├── notifications/  # NotificationsPage
-│   │   │   ├── profile/        # ProfilePage
-│   │   │   ├── public/         # Landing, About, Privacy, Terms
-│   │   │   └── settings/       # SettingsPage
 │   │   ├── App.jsx             # React Router route registry
 │   │   ├── index.css           # Tailwind custom styling & scrollbars
 │   │   └── main.jsx            # React root with QueryClient & AuthProvider
@@ -135,15 +112,16 @@ antigravity/
 │   │   ├── validators/         # Strict Zod schemas for requests & AI output schemas
 │   │   ├── app.js              # Express app initialization
 │   │   └── server.js           # Server listen with graceful shutdown
+│   ├── scripts/
+│   │   └── migrate.js          # Direct Supabase Cloud migration runner
 │   ├── tests/
 │   │   ├── integration/        # Health, crops, auth & farm CRUD tests
 │   │   └── unit/               # Zod validation schema unit tests
 │   └── package.json
 │
 ├── supabase/                   # Database migrations & seeds
-│   ├── migrations/
-│   │   └── 20261106_agri_assist_schema.sql  # 15 tables, RLS policies, triggers
-│   └── seed.sql                # 22 Indian crops catalog + reference data
+│   └── migrations/
+│       └── 001_initial_schema.sql  # 15 tables, RLS policies, triggers & seed catalog
 │
 └── docs/                       # Architecture & technical documentation
     ├── architecture.md
@@ -161,7 +139,7 @@ antigravity/
 
 - **Node.js**: v20.0.0 or higher
 - **npm**: v9.0.0 or higher
-- *(Optional)* **Supabase Account**: For production PostgreSQL and Auth
+- *(Optional)* **Supabase Cloud Account**: For production PostgreSQL and Auth
 - *(Optional)* **Google Gemini API Key**: For live AI operations (gemini-2.5-flash)
 
 ### Installation
@@ -189,9 +167,12 @@ NODE_ENV=development
 GEMINI_API_KEY=your_gemini_api_key_here
 
 # Supabase Database & Auth (Leave blank for in-memory demo mode)
-SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Optional for Direct PostgreSQL Migrations:
+DATABASE_URL=postgresql://postgres.[your-project]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres
 
 # Client CORS
 CLIENT_URL=http://localhost:5173
@@ -200,18 +181,27 @@ CLIENT_URL=http://localhost:5173
 #### Client (`client/.env`):
 ```env
 VITE_API_BASE_URL=/api/v1
-VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ### Database Setup & Migrations
 
-If using a real Supabase project:
-1. Open your Supabase Dashboard SQL Editor.
-2. Run the migration script in `supabase/migrations/20261106_agri_assist_schema.sql`.
-3. Run the seed data script in `supabase/seed.sql`.
+#### Option 1: Automated Node.js Migration Runner
+Run the migration runner directly from your terminal:
 
-*Note: If no Supabase credentials are provided in `.env`, the server automatically initializes an in-memory repository pre-loaded with mock farms and the 22 Indian crop catalog so the app works immediately out of the box!*
+```bash
+npm run migrate
+```
+
+This applies `supabase/migrations/001_initial_schema.sql` directly to your Supabase Cloud PostgreSQL database, creating all 15 tables, indexes, updated_at triggers, RLS policies, and inserting the 21 Indian crop varieties and reference sources.
+
+#### Option 2: Supabase Web Dashboard SQL Editor
+1. Open your [Supabase Dashboard](https://supabase.com/dashboard).
+2. Go to the **SQL Editor** (`/sql/new`).
+3. Paste the contents of `supabase/migrations/001_initial_schema.sql` and click **Run**.
+
+*Note: If no Supabase credentials are provided in `.env`, the server automatically initializes an in-memory repository pre-loaded with mock farms and the Indian crop catalog so the app works immediately out of the box!*
 
 ### Running the Application
 
@@ -236,7 +226,6 @@ Visit **http://localhost:5173** in your browser. You can click **"Demo Farmer Lo
 Run unit and integration test suites:
 
 ```bash
-cd server
 npm test
 ```
 
@@ -296,8 +285,3 @@ All API endpoints are prefixed with `/api/v1`:
 ## Agricultural Advisory Disclaimer
 
 > **Important Agricultural Notice**: AgriAssist AI provides educational and advisory insights powered by artificial intelligence and agronomic reference datasets. Environmental factors such as unseasonal microclimate shifts, localized pest vectors, soil heterogeneity, and seed quality variations affect real-world outcomes. Recommendations must be adapted to local conditions in consultation with licensed agricultural extension officers, Krishi Vigyan Kendras (KVK), or state agriculture departments.
-
-#   a n t i g r a v i t y  
- #   a n t i g r a v i t y  
- #   a n t i g r a v i t y - p r o j e c t  
- 
