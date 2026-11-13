@@ -285,3 +285,5 @@ All API endpoints are prefixed with `/api/v1`:
 ## Agricultural Advisory Disclaimer
 
 > **Important Agricultural Notice**: AgriAssist AI provides educational and advisory insights powered by artificial intelligence and agronomic reference datasets. Environmental factors such as unseasonal microclimate shifts, localized pest vectors, soil heterogeneity, and seed quality variations affect real-world outcomes. Recommendations must be adapted to local conditions in consultation with licensed agricultural extension officers, Krishi Vigyan Kendras (KVK), or state agriculture departments.
+#   a n t i g r a v i t y x  
+ 
